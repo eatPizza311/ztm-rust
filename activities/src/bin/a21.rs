@@ -25,4 +25,14 @@ fn find_user(name: &str) -> Option<i32> {
     }
 }
 
-fn main() {}
+fn main() {
+    let my_name = "Sam";
+    let user = find_user(my_name).map(|id| User {
+        user_id: id,
+        name: my_name.to_owned(),
+    });
+    match user {
+        Some(user) => println!("{:?}", user),
+        None => println!("not found"),
+    }
+}
