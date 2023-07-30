@@ -28,6 +28,7 @@
 //   the functionality for that menu in isolation.
 // * A vector is the easiest way to store the bills at stage 1, but a
 //   hashmap will be easier to work with at stages 2 and 3.
+use std::collections::HashMap;
 use std::io;
 
 fn get_input() -> Option<String> {
@@ -84,6 +85,22 @@ mod menu {
             println!("{:?}", bill)
         }
     }
+
+    pub fn delete_bill(bills: &mut Bills) {
+        for bill in bills.get_all() {
+            println!("{:?}", bill)
+        }
+        println!("Bill name to delete:");
+        let name: String = match get_input() {
+            Some(input) => input,
+            None => return,
+        };
+        if bills.delete(&name) {
+            println!("Bill {:?} deleted", name);
+        } else {
+            println!("The entry doesn't exist");
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -93,43 +110,54 @@ pub struct Bill {
 }
 
 pub struct Bills {
-    inner: Vec<Bill>,
+    inner: HashMap<String, Bill>,
 }
 
 impl Bills {
     fn new() -> Self {
-        Self { inner: vec![] }
+        Self {
+            inner: HashMap::new(),
+        }
     }
 
     fn add(&mut self, bill: Bill) {
-        self.inner.push(bill);
+        self.inner.insert(bill.name.to_string(), bill);
     }
 
     fn get_all(&self) -> Vec<&Bill> {
-        self.inner.iter().collect()
+        self.inner.values().collect()
+    }
+
+    fn delete(&mut self, name: &str) -> bool {
+        self.inner.remove(name).is_some()
     }
 }
 
 enum MainMenu {
     AddBill,
     ViewBill,
+    DeleteBill,
 }
+
 impl MainMenu {
     fn from_str(input: &str) -> Option<MainMenu> {
         match input {
             "1" => Some(Self::AddBill),
             "2" => Some(Self::ViewBill),
+            "3" => Some(Self::DeleteBill),
             _ => None,
         }
     }
 
     fn show() {
+        println!("");
         println!("== Manage Bills ==");
         println!("1. Add bill");
         println!("2. View bills");
         println!("3. Remove bill");
         println!("4. Update bill");
-        println!("5. Bill total\n");
+        println!("5. Bill total");
+        println!("");
         println!("Enter selection:");
     }
 }
@@ -142,6 +170,7 @@ fn main() {
         match MainMenu::from_str(input.as_str()) {
             Some(MainMenu::AddBill) => menu::add_bill(&mut all_bills),
             Some(MainMenu::ViewBill) => menu::view_bills(&all_bills),
+            Some(MainMenu::DeleteBill) => menu::delete_bill(&mut all_bills),
             None => break,
         }
     }
