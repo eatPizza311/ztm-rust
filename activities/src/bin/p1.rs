@@ -101,6 +101,25 @@ mod menu {
             println!("The entry doesn't exist");
         }
     }
+
+    pub fn modify_bill(bills: &mut Bills) {
+        for bill in bills.get_all() {
+            println!("{:?}", bill)
+        }
+        let name: String = match get_input() {
+            Some(input) => input,
+            None => return,
+        };
+        let amount = match get_bill_amunt() {
+            Some(input) => input,
+            None => return,
+        };
+        if bills.modify(&name, amount) {
+            println!("Bill {:?} modified", name);
+        } else {
+            println!("The entry doesn't exist")
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -131,12 +150,23 @@ impl Bills {
     fn delete(&mut self, name: &str) -> bool {
         self.inner.remove(name).is_some()
     }
+
+    fn modify(&mut self, name: &str, amount: f64) -> bool {
+        match self.inner.get_mut(name) {
+            Some(bill) => {
+                bill.amount = amount;
+                true
+            }
+            None => false,
+        }
+    }
 }
 
 enum MainMenu {
     AddBill,
     ViewBill,
     DeleteBill,
+    ModifyBill,
 }
 
 impl MainMenu {
@@ -145,6 +175,7 @@ impl MainMenu {
             "1" => Some(Self::AddBill),
             "2" => Some(Self::ViewBill),
             "3" => Some(Self::DeleteBill),
+            "4" => Some(Self::ModifyBill),
             _ => None,
         }
     }
@@ -156,22 +187,28 @@ impl MainMenu {
         println!("2. View bills");
         println!("3. Remove bill");
         println!("4. Update bill");
-        println!("5. Bill total");
         println!("");
         println!("Enter selection:");
     }
 }
-fn main() {
+
+fn run_program() -> Option<()> {
     let mut all_bills = Bills::new();
 
     loop {
         MainMenu::show();
-        let input = get_input().expect("no data input");
+        let input: String = get_input()?;
         match MainMenu::from_str(input.as_str()) {
             Some(MainMenu::AddBill) => menu::add_bill(&mut all_bills),
             Some(MainMenu::ViewBill) => menu::view_bills(&all_bills),
             Some(MainMenu::DeleteBill) => menu::delete_bill(&mut all_bills),
+            Some(MainMenu::ModifyBill) => menu::modify_bill(&mut all_bills),
             None => break,
         }
     }
+    None
+}
+
+fn main() {
+    run_program();
 }
