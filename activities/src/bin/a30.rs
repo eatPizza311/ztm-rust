@@ -18,4 +18,43 @@
 trait Body {}
 trait Color {}
 
-fn main() {}
+// Create a Vehicle structure that is generic over traits Body and Color
+#[derive(Debug)]
+struct Vehicle<B: Body, C: Color> {
+    body: B,
+    color: C,
+}
+
+// Implement a 'new' function for Vehicle that allows it to have any body
+//   and any color
+impl<B: Body, C: Color> Vehicle<B, C> {
+    fn new(body: B, color: C) -> Self {
+        Self { body, color }
+    }
+}
+
+// Create structures for vehicle bodies and vehicle colors and implement the
+//   Body and Color traits for these structures
+#[derive(Debug)]
+struct Car;
+impl Body for Car {}
+
+#[derive(Debug)]
+struct Truck;
+impl Body for Truck {}
+
+#[derive(Debug)]
+struct Red;
+impl Color for Red {}
+
+#[derive(Debug)]
+struct White;
+impl Color for White {}
+
+fn main() {
+    let red_truck = Vehicle::new(Truck, Red);
+    let white_car = Vehicle::new(Car, White);
+
+    println!("{:?}", red_truck);
+    println!("{:?}", white_car);
+}
