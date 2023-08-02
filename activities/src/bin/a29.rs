@@ -35,4 +35,18 @@ impl Priority for Guest {
     }
 }
 
-fn main() {}
+// Create a function that accepts the Priority trait as a generic parameter
+//   The function should print out the guest and their priority
+fn print_priority<T>(guest: T)
+where
+    T: Priority + std::fmt::Debug,
+{
+    println!("{:?} is a {:?} priority", guest, guest.get_priority())
+}
+
+fn main() {
+    let guest1 = Guest {};
+    let guest2 = ImportantGuest {};
+    print_priority(guest1);
+    print_priority(guest2);
+}
