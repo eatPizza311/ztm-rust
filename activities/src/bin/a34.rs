@@ -16,4 +16,54 @@
 // Notes:
 // * Optionally use generics for each state
 
-fn main() {}
+#[derive(Clone, Copy)]
+struct LuggageId(usize);
+
+struct Luggage(LuggageId);
+
+struct CheckIn(LuggageId);
+struct OnLoading(LuggageId);
+struct OffLoading(LuggageId);
+struct AwaitingPickup(LuggageId);
+struct EndCustody(LuggageId);
+
+impl Luggage {
+    fn new(id: LuggageId) -> Self {
+        Self(id)
+    }
+
+    fn checkin(self) -> CheckIn {
+        CheckIn(self.0)
+    }
+}
+
+impl CheckIn {
+    fn onload(self) -> OnLoading {
+        OnLoading(self.0)
+    }
+}
+
+impl OnLoading {
+    fn offload(self) -> OffLoading {
+        OffLoading(self.0)
+    }
+}
+
+impl OffLoading {
+    fn carousel(self) -> AwaitingPickup {
+        AwaitingPickup(self.0)
+    }
+}
+
+impl AwaitingPickup {
+    fn pickup(self) -> (Luggage, EndCustody) {
+        (Luggage(self.0), EndCustody(self.0))
+    }
+}
+
+fn main() {
+    let id = LuggageId(1);
+    let luggage = Luggage::new(id);
+    let luggage = luggage.checkin().onload().offload().carousel();
+    let (luggage, _) = luggage.pickup();
+}
