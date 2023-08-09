@@ -50,6 +50,8 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
                     // Display a color change message using the println! macro
                     LightMsg::ChangeColor(r, g, b) => {
                         println!("Color changed to: {}", "      ".on_truecolor(r, g, b));
+                        // The light bulb must also be able to turn on and off
+                        //   Display whether the light is on or off on each color change
                         match lightstatus {
                             LightStatus::Off => println!("Light is OFF"),
                             LightStatus::On => println!("Light is On"),
@@ -64,6 +66,7 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
                         lightstatus = LightStatus::Off;
                     },
                     LightMsg::Disconnect => {
+                        // Turn off the light when disconnecting from it
                         println!("disconnecting");
                         lightstatus = LightStatus::Off;
                         break;
@@ -78,12 +81,6 @@ fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
         lightstatus
     }
 )}
-
-    
-    // The light bulb must also be able to turn on and off
-    //   Display whether the light is on or off on each color change
-                    
-    // Turn off the light when disconnecting from it
 
 fn main() {
     let (s, r) = unbounded();
