@@ -28,9 +28,9 @@ fn msg_excited() -> &'static str {
 
 fn main() {
     use std::thread;
-    let msg_one = thread::spawn(move || msg_hello());
-    let msg_two = thread::spawn(move || msg_thread());
-    let msg_three = thread::spawn(move || msg_excited());
+    let msg_one = thread::spawn(msg_hello);
+    let msg_two = thread::spawn(msg_thread);
+    let msg_three = thread::spawn(msg_excited);
 
     let msg_one = msg_one.join().expect("fail to join msg one");
     let msg_two = msg_two.join().expect("fail to join msg two");
