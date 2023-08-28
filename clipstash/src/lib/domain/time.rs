@@ -25,6 +25,7 @@ impl FromStr for Time {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         // s should be in format like 2023-08-12
         match format!("{}T00:00:00Z", s).parse::<DateTime<Utc>>() {
+            // Using derive more From trait to convert DateTime<Utc> into Time
             Ok(time) => Ok(time.into()),
             Err(e) => Err(e),
         }

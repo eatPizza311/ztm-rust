@@ -50,7 +50,8 @@ impl DbId {
     pub fn new() -> DbId {
         Uuid::new_v4().into()
     }
-
+    // forwarding Uuid's nil function, which will create all zeros uuid
+    // to represent a non-exist or invalid uuid
     pub fn nil() -> DbId {
         Self(Uuid::nil())
     }

@@ -1,6 +1,6 @@
-// create module
+// declare submodule
 mod clip_id;
-// export structure to this crate so it can be direct access from outside
+// export structures into this crate so it can be direct access from outside
 pub use clip_id::ClipId;
 
 mod shortcode;
