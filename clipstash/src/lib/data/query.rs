@@ -3,6 +3,7 @@ use crate::data::{DataError, DatabasePool};
 use crate::ShortCode;
 use sqlx::Row;
 
+// alias Result so we don't need to type out error type DataError everytime
 type Result<T> = std::result::Result<T, DataError>;
 
 pub async fn get_clip<M: Into<model::GetClip>>(
@@ -12,8 +13,8 @@ pub async fn get_clip<M: Into<model::GetClip>>(
     let model = model.into();
     let shortcode = model.shortcode.as_str();
     Ok(sqlx::query_as!(
-        model::Clip,
-        "SELECT * FROM clips WHERE shortcode = ?",
+        model::Clip,                               // data type we want
+        "SELECT * FROM clips WHERE shortcode = ?", // query
         shortcode
     )
     .fetch_one(pool)

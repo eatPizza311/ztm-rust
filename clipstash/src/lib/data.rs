@@ -19,8 +19,10 @@ pub type Transaction<'t> = sqlx::Transaction<'t, Sqlite>;
 pub type AppDatabaseRow = sqlx::sqlite::SqliteRow;
 pub type AppQueryResult = sqlx::sqlite::SqliteQueryResult;
 
+// this is a generic structure that ensure type D has sqlx::Database implemented
 pub struct Database<D: sqlx::Database>(sqlx::Pool<D>);
 
+// implement specific to Sqlite database
 impl Database<Sqlite> {
     pub async fn new(connection_str: &str) -> Self {
         let pool = sqlx::sqlite::SqlitePoolOptions::new()
@@ -29,6 +31,7 @@ impl Database<Sqlite> {
         match pool {
             Ok(pool) => Self(pool),
             Err(e) => {
+                // print error to standard error ouput instead of standard outout
                 eprintln!("{}\n", e);
                 eprintln!(
                     "If the database has not yet been crated, run: \n    $ sqlx database setup\n"
