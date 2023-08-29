@@ -17,7 +17,23 @@ macro_rules! get {
     (first $count:literal items from $iterable:expr) => {
         $iterable.iter().take($count)
     };
+    // last k items from iterable
+    (last $count:literal items from $iterable:expr) => {{
+        let len = $iterable.len();
+        $iterable.iter().skip(len - $count)
+    }};
+    // first item from iterable
+    (first item from $iterable:expr) => {
+        $iterable.iter().nth(0)
+    };
+    // last item from iterable
+    (last item from $iterable:expr) => {{
+        let len = $iterable.len();
+        $iterable.iter().skip(len - 1).nth(0)
+    }};
 }
+
+
 
 fn main() {
     let data = vec![1, 2, 3, 4, 5];
