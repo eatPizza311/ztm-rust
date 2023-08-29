@@ -38,6 +38,24 @@ impl Deref for ContractorId {
     }
 }
 
+macro_rules! impl_deref {
+    ($id_type:ty) => {
+        impl Deref for $id_type {
+            type Target = Id;
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+    };
+}
+
+impl_deref!(EmployeeId);
+impl_deref!(GuestId);
+impl_deref!(InvestorId);
+impl_deref!(ManagerId);
+impl_deref!(VendorId);
+
+
 /// This function can accept any type which can be dereferenced into an Id.
 fn check_id(id: &Id) {
     println!("id {:?} ok!", id);
