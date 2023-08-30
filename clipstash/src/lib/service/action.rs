@@ -13,6 +13,7 @@ pub async fn update_clip(req: ask::UpdateClip, pool: &DatabasePool) -> Result<Cl
 
 pub async fn get_clip(req: ask::GetClip, pool: &DatabasePool) -> Result<Clip, ServiceError> {
     let user_password = req.password.clone();
+    // convert ask::GetClip -> model::GetClip -> domain::Clip
     let clip: Clip = query::get_clip(req, pool).await?.try_into()?;
     if clip.password.has_password() {
         if clip.password == user_password {
