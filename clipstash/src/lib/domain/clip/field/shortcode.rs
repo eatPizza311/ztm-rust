@@ -1,11 +1,12 @@
 use crate::domain::clip::ClipError;
 use derive_more::From;
 use rocket::request::FromParam;
+use rocket::{UriDisplayPath, UriDisplayQuery};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
 // From trait will automatically convert a String into ShortCode
-#[derive(Debug, Clone, Deserialize, Serialize, From)]
+#[derive(Debug, Clone, Deserialize, Serialize, From, UriDisplayPath, UriDisplayQuery)]
 pub struct ShortCode(String);
 
 impl ShortCode {
