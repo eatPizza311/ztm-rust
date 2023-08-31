@@ -12,7 +12,7 @@ use rocket::{uri, State};
 #[rocket::get("/")]
 fn home(renderer: &State<Renderer<'_>>) -> Html<String> {
     let context = ctx::Home::default();
-    RawHtml(renderer.render(context, &[]))
+    Html(renderer.render(context, &[]))
 }
 
 pub fn routes() -> Vec<rocket::Route> {
