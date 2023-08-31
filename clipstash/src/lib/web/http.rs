@@ -5,12 +5,12 @@ use crate::web::{ctx, form, renderer::Renderer, PageError};
 use crate::{ServiceError, ShortCode};
 use rocket::form::{Contextual, Form};
 use rocket::http::{Cookie, CookieJar, Status};
-use rocket::response::content::RawHtml;
+use rocket::response::content::Html;
 use rocket::response::{status, Redirect};
 use rocket::{uri, State};
 
 #[rocket::get("/")]
-fn home(renderer: &State<Renderer<'_>>) -> RawHtml<String> {
+fn home(renderer: &State<Renderer<'_>>) -> Html<String> {
     let context = ctx::Home::default();
     RawHtml(renderer.render(context, &[]))
 }
