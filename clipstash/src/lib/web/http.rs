@@ -1,9 +1,8 @@
-use crate::data::{self, AppDatabase};
+use crate::data::AppDatabase;
 use crate::service;
 use crate::service::action;
 use crate::web::{ctx, form, renderer::Renderer, PageError, PASSWORD_COOKIE};
 use crate::{ServiceError, ShortCode};
-use rocket::error::ErrorKind;
 use rocket::form::{Contextual, Form};
 use rocket::http::{Cookie, CookieJar, Status};
 use rocket::response::content::Html;
@@ -159,17 +158,21 @@ pub async fn get_raw_clip(
     }
 }
 
+// tell the rocket where our routes acutally are
 pub fn routes() -> Vec<rocket::Route> {
     rocket::routes![home, get_clip, new_clip, submit_clip_password, get_raw_clip]
 }
 
+// catch any unhandle error scenario
 pub mod catcher {
     use rocket::Request;
     use rocket::{catch, catchers, Catcher};
 
+    // catch all errors or any code we don't handle
     #[catch(default)]
     fn default(req: &Request) -> &'static str {
         eprint!("General error: {:?}", req);
+        // return Html instead of string can be use as error pages
         "something went wrong..."
     }
 
@@ -184,6 +187,7 @@ pub mod catcher {
         "404"
     }
 
+    // just like routes() function
     pub fn catchers() -> Vec<Catcher> {
         catchers![not_found, default, internal_error]
     }

@@ -2,7 +2,6 @@ use clipstash::data::AppDatabase;
 use clipstash::web::renderer::Renderer;
 use dotenv::dotenv;
 use std::path::PathBuf;
-use structopt::clap::App;
 use structopt::StructOpt;
 
 // create command line arguments
@@ -16,6 +15,7 @@ struct Opt {
 }
 
 fn main() {
+    // pull in environment variables
     dotenv().ok();
     let opt = Opt::from_args();
 
@@ -23,6 +23,7 @@ fn main() {
 
     let handle = rt.handle().clone();
 
+    // run a future and block a thread until the future complete
     rt.block_on(async move {
         let renderer = Renderer::new(opt.template_directory);
         let database = AppDatabase::new(&opt.connection_string).await;

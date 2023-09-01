@@ -17,6 +17,7 @@ impl<'a> Renderer<'a> {
         Self(renderer)
     }
 
+    // Turn a serializable structure into json Value
     fn convert_to_value<S>(serializable: &S) -> serde_json::Value
     where
         S: serde::Serialize + std::fmt::Debug,
@@ -29,6 +30,7 @@ impl<'a> Renderer<'a> {
         P: ctx::PageContext + serde::Serialize + std::fmt::Debug,
     {
         let mut value = Self::convert_to_value(&context);
+        // inserting three new field to our existing structure
         if let Some(value) = value.as_object_mut() {
             value.insert("_errors".into(), errors.into());
             value.insert("_title".into(), context.title().into());
@@ -42,12 +44,14 @@ impl<'a> Renderer<'a> {
         P: ctx::PageContext + serde::Serialize + std::fmt::Debug,
         D: serde::Serialize + std::fmt::Debug,
     {
+        use handlebars::to_json;
+
         let mut value = Self::convert_to_value(&context);
         if let Some(value) = value.as_object_mut() {
             value.insert("_errors".into(), errors.into());
             value.insert("_title".into(), context.title().into());
             value.insert("_base".into(), context.parent().into());
-            value.insert(data.0.into(), handlebars::to_json(data.1));
+            value.insert(data.0.into(), to_json(data.1));
         }
         self.do_render(context.template_path(), value)
     }

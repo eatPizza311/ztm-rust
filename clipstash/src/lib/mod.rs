@@ -14,6 +14,7 @@ use rocket::fs::FileServer;
 use rocket::{Build, Rocket};
 use web::renderer::Renderer;
 
+// function to build rocket server
 pub fn rocket(config: RocketConfig) -> Rocket<Build> {
     rocket::build()
         .manage::<AppDatabase>(config.database)
@@ -23,6 +24,7 @@ pub fn rocket(config: RocketConfig) -> Rocket<Build> {
         .register("/", web::http::catcher::catchers())
 }
 
+// server configuration
 pub struct RocketConfig {
     pub renderer: Renderer<'static>,
     pub database: AppDatabase,
